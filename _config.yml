@@ -22,7 +22,7 @@ title: ICON Workshop
 email: vincenzo.barbuto@unical.it
 description: >- # this means to ignore newlines until "baseurl:"
   Website for the ICON Workshop.
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "/2026" # the subpath of your site, e.g. /blog
 url: "https://workshop-icon.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: icon_workshop
 #github_username:  workshop-icon
