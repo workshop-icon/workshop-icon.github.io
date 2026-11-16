@@ -1,34 +1,64 @@
 @use "sass:math";
 
+// The two-column page (section labels in a rail) starts just above this width.
+$two-column: "screen and (min-width: #{$on-laptop + 1px})";
+
+// One line of running text.
+$body-line: $base-line-height * $body-font-size;
+
+// The workshop logo (from the 2026 edition), used in the header and footer.
+.site-logo {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 22%;
+}
+
+
+
 /**
  * Site header
  */
 .site-header {
-  border-top: 5px solid $grey-color-dark;
-  border-bottom: 1px solid $grey-color-light;
-  min-height: $spacing-unit * 1.865;
+  background-color: #fff;
+  border-bottom: 1px solid $rule-color;
 
   // Positioning context for the mobile navigation icon
   position: relative;
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 4rem;
+  }
 }
 
 .site-title {
-  @include relative-font-size(1.625);
-  font-weight: 300;
-  line-height: $base-line-height * $base-font-size * 2.25;
-  letter-spacing: -1px;
-  margin-bottom: 0;
-  float: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
 
   &,
-  &:visited {
-    color: $grey-color-dark;
+  &:visited,
+  &:hover {
+    color: $heading-color;
+  }
+
+  &:hover span {
+    text-decoration: underline;
+    text-decoration-color: $brand-color;
+    text-decoration-thickness: 2px;
   }
 }
 
 .site-nav {
-  float: right;
-  line-height: $base-line-height * $base-font-size * 2.25;
+  font-size: 0.9375rem;
 
   .nav-trigger {
       display: none;
@@ -39,23 +69,32 @@
   }
 
   .page-link {
-    color: $text-color;
-    line-height: $base-line-height;
+    text-decoration: none;
+
+    &,
+    &:visited {
+      color: $text-color;
+    }
+
+    &:hover {
+      color: $link-color;
+    }
 
     // Gaps between nav items, but not on the last one
     &:not(:last-child) {
-      margin-right: 20px;
+      margin-right: 1.5rem;
     }
   }
 
   @include media-query($on-palm) {
     position: absolute;
-    top: 9px;
-    right: math.div($spacing-unit, 2);
+    top: 14px;
+    right: clamp(1rem, 5vw, 2rem);
     background-color: $background-color;
-    border: 1px solid $grey-color-light;
+    border: 1px solid $rule-color;
     border-radius: 5px;
     text-align: right;
+    z-index: 2;
 
     label[for="nav-trigger"] {
       display: block;
@@ -92,7 +131,7 @@
 
     .page-link {
       display: block;
-      padding: 5px 10px;
+      padding: 8px 12px;
 
       &:not(:last-child) {
         margin-right: 0;
@@ -105,70 +144,146 @@
 
 
 /**
+ * Hero
+ *
+ * The workshop name, with its first bold run (ICON) lifted out as the
+ * wordmark and the acronym letters in petrol, over the continuum strip.
+ */
+.hero {
+  padding: clamp(3rem, 9vw, 5.5rem) 0 clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.hero-title {
+  margin: 0;
+  max-width: 19em;
+  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+
+  strong {
+    font-weight: 700;
+    color: $brand-color;
+  }
+
+  > strong:first-child {
+    display: block;
+    margin-bottom: 0.2em;
+    font-size: clamp(4rem, 2.4rem + 7vw, 6rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+}
+
+.continuum {
+  margin-top: clamp(2.5rem, 7vw, 4.5rem);
+  color: $brand-color;
+}
+
+.continuum-field {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+
+  rect {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: continuum-node 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: var(--d, 0ms);
+  }
+
+  // A few active nodes near the edge glow amber, like the logo's sun.
+  .lit {
+    fill: $highlight-color;
+  }
+}
+
+@keyframes continuum-node {
+  from {
+    opacity: 0;
+    transform: scale(0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .continuum-field rect {
+    animation: none;
+  }
+}
+
+.continuum-axis {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $grey-color-dark;
+}
+
+.continuum-line {
+  flex: 1;
+  height: 1px;
+  background-color: $rule-color;
+}
+
+
+
+/**
  * Site footer
  */
 .site-footer {
-  border-top: 1px solid $grey-color-light;
-  padding: $spacing-unit 0;
+  padding: 2.5rem 0 3rem;
+  border-top: 1px solid $rule-color;
+  background-color: $surface-color;
+  font-size: 0.9375rem;
+  color: $grey-color-dark;
+
+  .wrapper {
+    display: grid;
+    row-gap: 0.5rem;
+
+    @media #{$two-column} {
+      grid-template-columns: $rail-width minmax(0, 1fr);
+    }
+  }
 }
 
-.footer-heading {
-  @include relative-font-size(1.125);
-  margin-bottom: math.div($spacing-unit, 2);
+.footer-title {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: $heading-color;
+
+  .site-logo {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }
 
-.contact-list,
+.footer-description {
+  margin-bottom: 0;
+  max-width: 34rem;
+}
+
 .social-media-list {
   list-style: none;
-  margin-left: 0;
-}
+  margin: 0.5rem 0 0;
 
-.footer-col-wrapper {
-  @include relative-font-size(0.9375);
-  color: $grey-color;
-  margin-left: -(math.div($spacing-unit, 2));
-  @extend %clearfix;
-}
-
-.footer-col {
-  float: left;
-  margin-bottom: math.div($spacing-unit, 2);
-  padding-left: math.div($spacing-unit, 2);
-}
-
-.footer-col-1 {
-  width: -webkit-calc(35% - #{math.div($spacing-unit, 2)});
-  width:         calc(35% - #{math.div($spacing-unit, 2)});
-}
-
-.footer-col-2 {
-  width: -webkit-calc(20% - #{math.div($spacing-unit, 2)});
-  width:         calc(20% - #{math.div($spacing-unit, 2)});
-}
-
-.footer-col-3 {
-  width: -webkit-calc(45% - #{math.div($spacing-unit, 2)});
-  width:         calc(45% - #{math.div($spacing-unit, 2)});
-}
-
-@include media-query($on-laptop) {
-  .footer-col-1,
-  .footer-col-2 {
-    width: -webkit-calc(50% - #{math.div($spacing-unit, 2)});
-    width:         calc(50% - #{math.div($spacing-unit, 2)});
+  &:empty {
+    display: none;
   }
 
-  .footer-col-3 {
-    width: -webkit-calc(100% - #{math.div($spacing-unit, 2)});
-    width:         calc(100% - #{math.div($spacing-unit, 2)});
-  }
-}
-
-@include media-query($on-palm) {
-  .footer-col {
-    float: none;
-    width: -webkit-calc(100% - #{math.div($spacing-unit, 2)});
-    width:         calc(100% - #{math.div($spacing-unit, 2)});
+  @media #{$two-column} {
+    grid-column: 2;
   }
 }
 
@@ -178,8 +293,12 @@
  * Page content
  */
 .page-content {
-  padding: $spacing-unit 0;
+  padding: $page-gap 0 5rem;
   flex: 1;
+
+  &.has-hero {
+    padding-top: 0;
+  }
 }
 
 .page-heading {
@@ -201,7 +320,7 @@
 
 .post-meta {
   font-size: $small-font-size;
-  color: $grey-color;
+  color: $grey-color-dark;
 }
 
 .post-link {
@@ -209,49 +328,207 @@
   @include relative-font-size(1.5);
 }
 
-
-
-/**
- * Posts
- */
 .post-header {
-  margin-bottom: $spacing-unit;
+  margin-bottom: 2rem;
 }
 
 .post-title {
-  @include relative-font-size(2.625);
-  letter-spacing: -1px;
-  line-height: 1;
+  margin-bottom: 0;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 
-  @include media-query($on-laptop) {
-    @include relative-font-size(2.25);
+
+
+/**
+ * Page body
+ *
+ * Each section opens on a light rule with a short petrol segment at its
+ * start, the 2026 heading underline turned to the top. Narrow screens read as
+ * one column; wider ones move every `h2` into a rail on the left, level with
+ * the first block of its section.
+ */
+$section-gap: clamp(3rem, 7vw, 4.5rem);
+
+.post-content {
+  > * {
+    margin-bottom: 0;
+  }
+
+  > * + * {
+    margin-top: 1.15rem;
+  }
+
+  // Running text keeps its measure even when the rail is folded away.
+  > p,
+  > ul,
+  > ol {
+    max-width: $measure;
+  }
+
+  > h2 {
+    position: relative;
+    margin-top: $section-gap;
+    padding-top: 1.25rem;
+    border-top: 2px solid $rule-color;
+    font-size: 1.5rem;
+    line-height: 1.2;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: $brand-gradient;
+    }
+  }
+
+  > h2 + * {
+    margin-top: 1.25rem;
+  }
+
+  // The paragraph that opens a section is its lede.
+  > h2 + p {
+    font-size: 1.1875rem;
+    line-height: 1.55;
+  }
+
+  > h3 {
+    margin-top: 2.25rem;
+    font-size: 1.125rem;
+  }
+
+  > h4 {
+    margin-top: 1.75rem;
+    font-size: 1rem;
+  }
+
+  @media #{$two-column} {
+    display: grid;
+    grid-template-columns: $rail-width minmax(0, 1fr);
+
+    > * {
+      grid-column: 2;
+    }
+
+    > h2 {
+      grid-column: 1;
+      padding-right: 2rem;
+    }
+
+    // A section's label and its first block share a row, and the rule above
+    // them runs across both.
+    > h2,
+    > h2 + * {
+      margin-top: $section-gap;
+      padding-top: 1.5rem;
+      border-top: 2px solid $rule-color;
+    }
   }
 }
 
-.post-content {
-  margin-bottom: $spacing-unit;
 
-  h2 {
-    @include relative-font-size(2);
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.75);
-    }
+/**
+ * Edition list
+ *
+ * One entry per edition: its year large, its title as a link, then where
+ * and when it is held. The year comes from the item's `data-year`.
+ */
+.edition-list {
+  list-style: none;
+  margin-left: 0;
+
+  > li + li {
+    margin-top: 2.25rem;
+    padding-top: 2.25rem;
+    border-top: 1px solid $rule-color;
   }
 
-  h3 {
-    @include relative-font-size(1.625);
-
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.375);
-    }
+  > li[data-year]::before {
+    content: attr(data-year);
+    display: block;
+    margin-bottom: 0.875rem;
+    font-size: clamp(2.75rem, 2rem + 3vw, 3.5rem);
+    font-weight: 800;
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: $brand-color;
   }
 
-  h4 {
-    @include relative-font-size(1.25);
+  p {
+    margin-bottom: 0;
+  }
 
-    @include media-query($on-laptop) {
-      @include relative-font-size(1.125);
+  p + p {
+    margin-top: 0.625rem;
+    color: $grey-color-dark;
+  }
+
+  > li > p:first-child {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+
+    a {
+      font-weight: 600;
+      text-decoration-color: transparent;
+
+      &::after {
+        content: "";
+        display: inline-block;
+        width: 0.8em;
+        height: 0.8em;
+        margin-left: 0.3em;
+        vertical-align: -0.06em;
+        background-color: currentColor;
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11M9 3.5 13.5 8 9 12.5'/%3E%3C/svg%3E") center / contain no-repeat;
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 8h11M9 3.5 13.5 8 9 12.5'/%3E%3C/svg%3E") center / contain no-repeat;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      &:hover {
+        text-decoration-color: currentColor;
+
+        &::after {
+          transform: translateX(0.2em);
+        }
+      }
+    }
+  }
+}
+
+
+
+/**
+ * Topic list
+ *
+ * Ruled rows, each opened by a small brand-coloured square.
+ */
+.topic-list {
+  list-style: none;
+  margin-left: 0;
+  border-bottom: 1px solid $rule-color;
+
+  > li {
+    position: relative;
+    margin-top: 0;
+    padding: 0.75rem 0 0.75rem 1.5rem;
+    border-top: 1px solid $rule-color;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0.125rem;
+      top: calc(0.75rem + #{math.div($body-line, 2)} - 3px);
+      width: 6px;
+      height: 6px;
+      background-color: $brand-color;
     }
   }
 }

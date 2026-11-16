@@ -7,7 +7,10 @@
 
     {%- include header.html -%}
 
-    <main class="page-content" aria-label="Content">
+    <main class="page-content{% if page.heading %} has-hero{% endif %}" aria-label="Content">
+      {%- if page.heading -%}
+        {%- include hero.html -%}
+      {%- endif -%}
       <div class="wrapper">
         {{ content }}
       </div>
